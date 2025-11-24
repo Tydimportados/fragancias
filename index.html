@@ -1,1 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TID Importados - Catálogo de perfumes originales. Productos de calidad con atención personalizada.">
+    <title>TID Importados - Catálogo de Perfumes</title>
 
+    <style>
+        /* ========================================
+           README / INSTRUCCIONES DE CONFIGURACIÓN
+           ========================================
+
+           1. LOGO (OPCIONES):
+              Opción A - Texto personalizado:
+                Busca "const LOGO_TEXT" en el JavaScript
+                Reemplaza "TID IMPORTADOS" con tu texto
+
+              Opción B - Imagen de logo:
+                Busca "const LOGO_IMAGE_URL" en el JavaScript
+                Reemplaza con tu URL: "logo.png" o "https://ejemplo.com/logo.png"
+
+           2. WHATSAPP:
+              Busca "const WHATSAPP_NUMBER" en el JavaScript
+              Reemplaza con tu número (formato: 5491127178938 sin +)
+
+           3. INSTAGRAM:
+              Busca "const INSTAGRAM_USER" en el JavaScript
+              Reemplaza con tu usuario (sin @)
+
+           4. IMÁGENES DE PRODUCTOS:
+              Las imágenes siguen el patrón: images/SKU###.jpg
+              Cada producto tiene un campo 'image' editable:
+                - Vacío: usa automáticamente images/SKU###.jpg
+                - Con URL: usa esa URL
+
+           5. STOCK DE PRODUCTOS:
+              Cada producto tiene un campo 'stock':
+                - 'in': muestra "En Stock" (verde)
+                - 'out': muestra "Sin Stock" (rojo)
+
+           6. AGREGAR/EDITAR PRODUCTOS:
+              Busca el array "const products"
+              Formato: {
+                sku: 'CODIGO',
+                name: 'NOMBRE',
+                brand: 'MARCA',
+                volume: '100ML',
+                price: '$65.000' o 'Consultar',
+                featured: true/false,
+                image: '' o 'url-imagen',
+                stock: 'in' o 'out'
+              }
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #ffffff;
+            --color-secondary: #f8f9fa;
+            --color-tertiary: #f0f1f3;
+            --color-border: #e1e4e8;
+            --color-text: #1a1a1a;
+            --color-text-light: #6b7280;
+            --color-accent: #1f2937;
+            --color-accent-light: #374151;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-primary);
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hamburger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: var(--transition);
+            min-width: 40px;
+        }
+
+        .hamburger:hover {
+            opacity: 0.6;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--color-accent);
+            display: block;
+            transition: var(--transition);
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--color-accent);
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            display: block;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .header-icons a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .header-icons a:hover {
+            color: var(--color-accent-light);
+            transform: scale(1.15);
+        }
+
+        .header-icons svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* MENÚ LATERAL */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1500;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--color-primary);
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            z-index: 2000;
+            padding: 2rem;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .side-menu nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .side-menu a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+        }
+
+        .side-menu a:hover {
+            color: var(--color-text-light);
+            padding-left: 0.5rem;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            padding: 5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        /* SECCIONES */
+        section {
+            padding: 3rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            color: var(--color-accent);
+            letter-spacing: 0.5px;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+            border-radius: 2px;
+        }
+
+        /* CATÁLOGO - SIEMPRE 2 COLUMNAS */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-card {
+            background-color: var(--color-primary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .product-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
+            border-color: var(--color-accent);
+        }
+
+        .product-stock {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+
+        .product-stock.out-of-stock {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #dc2626 100%);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background-color: var(--color-tertiary);
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+            filter: brightness(0.95);
+        }
+
+        .product-info {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            flex: 1;
+            background-color: var(--color-primary);
+        }
+
+        .product-brand {
+            font-size: 0.7rem;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+        }
+
+        .product-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            line-height: 1.4;
+            min-height: 2.8em;
+        }
+
+        .product-volume {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            font-weight: 500;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-top: 0.25rem;
+        }
+
+        .product-sku {
+            font-size: 0.7rem;
+            color: var(--color-text-light);
+            font-weight: 500;
+        }
+
+        .product-button {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+            color: var(--color-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.75rem;
+            letter-spacing: 0.3px;
+        }
+
+        .product-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-button:active {
+            transform: translateY(0);
+        }
+
+        /* BOTÓN VER MÁS */
+        .load-more-container {
+            text-align: center;
+            margin: 3rem 0 1rem;
+        }
+
+        .load-more-btn {
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-tertiary) 100%);
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .load-more-btn:hover {
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+            color: var(--color-primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        .load-more-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .load-more-btn.hidden {
+            display: none;
+        }
+
+        /* MÉTODOS DE PAGO Y ENTREGA */
+        .payment-methods, .delivery-method {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-tertiary) 100%);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .payment-methods:hover, .delivery-method:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .payment-methods h3, .delivery-method h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.75rem;
+            color: var(--color-accent);
+            font-weight: 800;
+        }
+
+        .payment-icons, .delivery-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .payment-icon, .delivery-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payment-icon svg, .delivery-icon svg {
+            width: 48px;
+            height: 48px;
+            fill: var(--color-accent);
+        }
+
+        .payment-icon span, .delivery-icon span {
+            font-size: 0.9rem;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .delivery-method p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* INFO RÁPIDA */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            padding: 2.25rem;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+        }
+
+        .info-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
+        }
+
+        .info-card svg {
+            width: 56px;
+            height: 56px;
+            fill: var(--color-accent);
+            margin-bottom: 1.25rem;
+            opacity: 0.9;
+            transition: var(--transition);
+        }
+
+        .info-card:hover svg {
+            transform: scale(1.1);
+        }
+
+        .info-card h4 {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-accent);
+            font-weight: 800;
+        }
+
+        .info-card p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            line-height: 1.7;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, var(--color-accent) 0%, #0f172a 100%);
+            color: var(--color-primary);
+            padding: 3rem 1.5rem 1.5rem;
+            margin-top: 4rem;
+            position: relative;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-social a {
+            color: var(--color-primary);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            opacity: 0.85;
+        }
+
+        .footer-social a:hover {
+            opacity: 1;
+            transform: translateY(-4px);
+        }
+
+        .footer-social svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .footer-legal {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.8;
+        }
+
+        /* RESPONSIVE MOBILE */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+                margin-bottom: 2rem;
+            }
+
+            .catalog-grid {
+                gap: 1rem;
+            }
+
+            .load-more-btn {
+                padding: 0.9rem 2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* RESPONSIVE TABLET */
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .catalog-grid {
+                gap: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* RESPONSIVE DESKTOP */
+        @media (min-width: 1024px) {
+            header {
+                padding: 1.5rem 2rem;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .hero {
+                padding: 6rem 2rem;
+            }
+
+            .catalog-grid {
+                gap: 2rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            section {
+                padding: 4rem;
+            }
+        }
+
+        /* ACCESIBILIDAD */
+        :focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* SCROLL SUAVE */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menú de navegación">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- LOGO EDITABLE -->
+            <a href="#inicio" class="logo" aria-label="TID Importados - Inicio" id="logoLink">
+                <span id="logoText">TYD IMPORTADOS</span>
+                <img id="logoImage" style="display: none;" alt="TID Importados Logo">
+            </a>
+
+            <div class="header-icons">
+                <a href="#" id="instagramLink" target="_blank" rel="noopener noreferrer" aria-label="Síguenos en Instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+                <a href="#" id="whatsappHeaderLink" target="_blank" rel="noopener noreferrer" aria-label="Contáctanos por WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MENÚ LATERAL -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <aside class="side-menu" id="sideMenu">
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#catalogo">Catálogo</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </aside>
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Perfumes Originales</h1>
+            <p>Descubre nuestra colección de fragancias exclusivas con atención personalizada</p>
+        </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <main>
+        <section id="catalogo">
+            <h2 class="section-title">Productos Destacados</h2>
+            <div class="catalog-grid" id="catalogGrid"></div>
+
+            <div class="load-more-container">
+                <button class="load-more-btn" id="loadMoreBtn">Ver más productos</button>
+            </div>
+        </section>
+
+        <!-- MÉTODOS DE PAGO -->
+        <section class="payment-methods">
+            <h3>Métodos de Pago</h3>
+            <div class="payment-icons">
+                <div class="payment-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
+                    </svg>
+                    <span>Efectivo</span>
+                </div>
+                <div class="payment-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                    </svg>
+                    <span>Transferencia</span>
+                </div>
+                <div class="payment-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-2 0H3V6h14v8zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm13 0v11c0 1.1-.9 2-2 2H4v-2h17V7h2z"/>
+                    </svg>
+                    <span>Mercado Pago</span>
+                </div>
+            </div>
+            <p style="color: #8a8a8a; margin-top: 1rem;">Aceptamos múltiples formas de pago para tu comodidad</p>
+        </section>
+
+        <!-- MÉTODO DE ENTREGA -->
+        <section class="delivery-method">
+            <h3>Método de Entrega</h3>
+            <div class="delivery-icons">
+                <div class="delivery-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 18.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zm1.5-9H17V12h4.46L19.5 9.5zM6 18.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 8l3 4v5h-2c0 1.66-1.34 3-3 3s-3-1.34-3-3H9c0 1.66-1.34 3-3 3s-3-1.34-3-3H1V6c0-1.11.89-2 2-2h14v4h3zM3 6v9h.76c.55-.61 1.35-1 2.24-1s1.69.39 2.24 1H15V6H3z"/>
+                    </svg>
+                    <span>A coordinar</span>
+                </div>
+            </div>
+            <p>Los métodos de entrega se coordinan por WhatsApp luego de confirmar disponibilidad. Forma y costo a acordar al momento de la compra (retiro o envío a convenir).</p>
+        </section>
+
+        <!-- INFORMACIÓN RÁPIDA -->
+        <section id="contacto">
+            <h2 class="section-title">¿Por qué elegirnos?</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <h4>Atención Personalizada de una paraguaya</h4>
+                    <p>Te asesoramos para encontrar la fragancia perfecta para vos</p>
+                </div>
+                <div class="info-card">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                    </svg>
+                    <h4>Respuesta Rápida por WhatsApp</h4>
+                    <p>Consultas y disponibilidad en minutos</p>
+                </div>
+                <div class="info-card">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
+                    </svg>
+                    <h4>Productos 100% Originales </h4>
+                    <p>Fragancias auténticas de las mejores marcas</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-social">
+                <a href="#" id="instagramFooterLink" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+                <a href="#" id="whatsappFooterLink" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="footer-legal">
+                <p>&copy; 2025 TYD Importados. Todos los derechos reservados.</p>
+                <p>Los productos y marcas mencionadas son propiedad de sus respectivos titulares.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // CONFIGURACIÓN - EDITA ESTOS VALORES
+        // ==========================================
+
+        // LOGO - Elige entre texto o imagen
+        const LOGO_TEXT = 'TYD IMPORTADOS'; // Reemplaza con tu texto (déjalo vacío si usas imagen)
+        const LOGO_IMAGE_URL = ''; // Reemplaza con tu URL de logo (ej: 'logo.png' o 'https://ejemplo.com/logo.png')
+
+        const WHATSAPP_NUMBER = '5491127178938'; // Reemplaza con tu número (formato: 5491127178938)
+        const INSTAGRAM_USER = 'tydimportados'; // Reemplaza con tu usuario (sin @)
+
+        // Función para generar ruta de imagen (puedes editarla)
+        // Si la propiedad 'image' está vacía en el producto, usa la URL por defecto
+        function getProductImage(product) {
+            if (product.image && product.image.trim()) {
+                return product.image;
+            }
+            return `images/${product.sku}.jpg`; // Patrón: images/AFNAN001.jpg
+        }
+
+        // ==========================================
+        // BASE DE DATOS DE PRODUCTOS (78 PRODUCTOS)
+        // ==========================================
+
+        const products = [
+            // DESTACADOS (primeros 8)
+            { sku: 'LATTAFA052', name: 'KHAMRAH', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: true, image: '', stock: 'in' },
+            { sku: 'LATTAFA065', name: 'THE KINGDOM', brand: 'LATTAFA', volume: '100ML', price: '$70.000', featured: true, image: '', stock: 'in' },
+            { sku: 'ARMAF011', name: 'CLUB DE NUIT INTENSE', brand: 'ARMAF', volume: '105ML', price: '$65.000', featured: true, image: '', stock: 'in' },
+            { sku: 'ARMAF026', name: 'YUM YUM EDP FEM', brand: 'ARMAF', volume: '100ML', price: '$85.000', featured: true, image: '', stock: 'in' },
+            { sku: 'BHARARA027', name: 'KING', brand: 'BHARARA', volume: '100ML', price: '$91.000', featured: true, image: '', stock: 'in' },
+            { sku: 'ALHARAMAIN004', name: 'AMBER OUD AQUA DUBAI', brand: 'AL HARAMAIN', volume: '100ML', price: '$90.000', featured: true, image: '', stock: 'in' },
+            { sku: 'ORIENTICA071', name: 'AMBER ROUGE', brand: 'ORIENTICA', volume: '80ML', price: '$120.000', featured: true, image: '', stock: 'in' },
+            { sku: 'LATTAFA067', name: 'YARA CANDY', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: true, image: '', stock: 'in' },
+
+            // RESTO DE PRODUCTOS
+            { sku: 'AFNAN001', name: '9AM DIVE', brand: 'AFNAN', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'AFNAN002', name: '9PM BLACK EDP', brand: 'AFNAN', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'AFNAN003', name: '9PM REBEL EDP', brand: 'AFNAN', volume: '100ML', price: '$70.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ALHARAMAIN005', name: 'DUBAI NIGHT', brand: 'AL HARAMAIN', volume: '100ML', price: '$90.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ALHARAMAIN006', name: 'CARBON', brand: 'AL HARAMAIN', volume: '100ML', price: '$95.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ALHARAMAIN007', name: 'AMBER OUD GOLD', brand: 'AL HARAMAIN', volume: '100ML', price: '$95.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF008', name: 'CLUB DE NUIT MAN EDT', brand: 'ARMAF', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF009', name: 'CLUB DE NUIT INTENSE WOMAN EDP', brand: 'ARMAF', volume: '105ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF010', name: 'CLUB DE NUIT ICONIC EDP', brand: 'ARMAF', volume: '105ML', price: '$80.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF012', name: 'CLUB DE NUIT IMPERIALE', brand: 'ARMAF', volume: '100ML', price: '$75.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF013', name: 'CLUB DE NUIT MILESTONE', brand: 'ARMAF', volume: '105ML', price: '$68.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF014', name: 'CLUB DE NUIT LIONHEART', brand: 'ARMAF', volume: '100ML', price: '$75.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF015', name: 'CLUB DE NUIT UNTOLD', brand: 'ARMAF', volume: '105ML', price: '$84.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF016', name: 'CLUB DE NUIT MALEKA', brand: 'ARMAF', volume: '105ML', price: '$80.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF017', name: 'ODYSSEY AOUD', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF018', name: 'ODYSSEY CANDEE', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF019', name: 'ODYSSEY HOMME', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF020', name: 'ODYSSEY LIMONI FRESH', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$75.600', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF021', name: 'ODYSSEY MANDARIN SKY', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF022', name: 'ODYSSEY MEGA MEN', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF023', name: 'ODYSSEY SPECTRA', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$58.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF024', name: 'ODYSSEY DUBAI CHOCOLAT', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ARMAF025', name: 'ODYSSEY TYRANT', brand: 'ARMAF ODYSSEY', volume: '100ML', price: '$58.000', featured: false, image: '', stock: 'in' },
+            { sku: 'BHARARA028', name: 'NICHE FEMME', brand: 'BHARARA', volume: '100ML', price: '$100.000', featured: false, image: '', stock: 'in' },
+            { sku: 'BHARARA029', name: 'KING GOLD EDITION', brand: 'BHARARA', volume: '100ML', price: '$116.000', featured: false, image: '', stock: 'in' },
+            { sku: 'BHARARA030', name: 'VIKING KASHMIR', brand: 'BHARARA', volume: '100ML', price: '$100.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA031', name: 'AL NOBLE AMEER', brand: 'LATTAFA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA032', name: 'AL NOBLE SAFEER', brand: 'LATTAFA', volume: '100ML', price: '$58.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA033', name: 'AL NOBLE WAZEER', brand: 'LATTAFA', volume: '100ML', price: '$70.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA034', name: 'TERIAQ', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA035', name: 'VICTORIA', brand: 'LATTAFA', volume: '100ML', price: '$58.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA036', name: 'ASAD', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA037', name: 'ASAD BOURBON', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA038', name: 'ASAD ZANZIBAR', brand: 'LATTAFA', volume: '100ML', price: '$50.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA039', name: 'BADEE AL OUD AMETHYST', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA040', name: 'BADEE AL OUD GLORY BLACK', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA041', name: 'BADEE AL OUD HONOR', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA042', name: 'BADEE AL OUD NOBLE BLUSH', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA043', name: 'BADEE AL OUD SUBLIME', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA044', name: 'ECLAIRE', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA045', name: 'EMAAN', brand: 'LATTAFA', volume: '100ML', price: 'Consultar', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA046', name: 'FAKHAR WOMEN ROSE GOLD', brand: 'LATTAFA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA047', name: 'FAKHAR EXTRAIT GOLD', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA048', name: 'FAKHAR MEN BLACK', brand: 'LATTAFA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA049', name: 'RAED LUXE GOLD', brand: 'LATTAFA', volume: '100ML', price: 'Consultar', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA050', name: 'HAYAATI', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA051', name: 'HAYAATI GOLD ELIXIR', brand: 'LATTAFA', volume: '100ML', price: '$50.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA053', name: 'KHAMRAH QAHWA', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA054', name: 'MAAHIR', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA055', name: 'MAAHIR BLACK EDITION', brand: 'LATTAFA', volume: '100ML', price: 'Consultar', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA056', name: 'MAAHIR LEGACY', brand: 'LATTAFA', volume: '100ML', price: 'Consultar', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA057', name: 'MAYAR CHERRY', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA058', name: 'MAYAR NATURAL INTENSE', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA059', name: 'MUSAMAM WHITE INTENSE', brand: 'LATTAFA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA060', name: 'NEBRAS', brand: 'LATTAFA', volume: '100ML', price: 'Consultar', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA061', name: 'AFEEF WOMAN', brand: 'LATTAFA', volume: '100ML', price: 'Consultar', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA062', name: 'QIMMAH MEN', brand: 'LATTAFA', volume: '100ML', price: '$75.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA063', name: 'QAED AL FURSAN', brand: 'LATTAFA', volume: '90ML', price: '$50.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA064', name: 'QAED AL FURSAN UNLIMITED', brand: 'LATTAFA', volume: '90ML', price: '$45.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA066', name: 'THE KINGDOM FEM', brand: 'LATTAFA', volume: '100ML', price: '$60.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA068', name: 'YARA MOI BLANCO', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA069', name: 'YARA ROSA', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA070', name: 'YARA TOUS LARANJA', brand: 'LATTAFA', volume: '100ML', price: '$50.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ORIENTICA072', name: 'ROYAL BLEU', brand: 'ORIENTICA', volume: '80ML', price: '$95.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA073', name: 'HIS CONFESSION', brand: 'LATTAFA', volume: '100ML', price: '$75.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA074', name: 'HER CONFESSION', brand: 'LATTAFA', volume: '100ML', price: '$75.000', featured: false, image: '', stock: 'in' },
+            { sku: 'LATTAFA075', name: 'SAKEENA', brand: 'LATTAFA', volume: '100ML', price: '$55.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ZIMAYA076', name: 'SHARAF BLEND', brand: 'ZIMAYA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ZIMAYA077', name: 'TIRAMISU CARAMEL', brand: 'ZIMAYA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' },
+            { sku: 'ZIMAYA078', name: 'TIRAMISU COCO', brand: 'ZIMAYA', volume: '100ML', price: '$65.000', featured: false, image: '', stock: 'in' }
+        ];
+
+        // ==========================================
+        // LÓGICA DE LA APLICACIÓN
+        // ==========================================
+
+        let currentPage = 0;
+        const ITEMS_PER_PAGE = 12;
+
+        // Menú hamburguesa
+        const hamburger = document.getElementById('hamburgerBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        hamburger.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            sideMenu.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        }
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.side-menu a').forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // Configurar logo
+        const logoText = document.getElementById('logoText');
+        const logoImage = document.getElementById('logoImage');
+
+        if (LOGO_IMAGE_URL && LOGO_IMAGE_URL.trim()) {
+            // Mostrar imagen de logo
+            logoImage.src = LOGO_IMAGE_URL;
+            logoImage.style.display = 'block';
+            logoText.style.display = 'none';
+        } else if (LOGO_TEXT && LOGO_TEXT.trim()) {
+            // Mostrar texto de logo
+            logoText.textContent = LOGO_TEXT;
+            logoText.style.display = 'inline';
+            logoImage.style.display = 'none';
+        }
+
+        // Configurar enlaces de redes sociales
+        document.getElementById('instagramLink').href = `https://www.instagram.com/tyd.importados?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==/${INSTAGRAM_USER}`;
+        document.getElementById('instagramFooterLink').href = `https://www.instagram.com/tyd.importados?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==/${INSTAGRAM_USER}`;
+
+        const whatsappBaseUrl = `https://wa.me/${WHATSAPP_NUMBER}`;
+        document.getElementById('whatsappHeaderLink').href = `${whatsappBaseUrl}?text=Hola, quisiera más información sobre sus productos.`;
+        document.getElementById('whatsappFooterLink').href = `${whatsappBaseUrl}?text=Hola, quisiera más información sobre sus productos.`;
+
+        // Renderizar productos
+        const catalogGrid = document.getElementById('catalogGrid');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+        function createProductCard(product) {
+            const card = document.createElement('article');
+            card.className = 'product-card';
+
+            const isConsultar = product.price === 'Consultar';
+            const whatsappMessage = isConsultar
+                ? `Hola, quisiera saber si está disponible y cuál es el precio del perfume "${product.name}" (SKU: ${product.sku}). Gracias.`
+                : `Hola, quisiera saber si está disponible el perfume "${product.name}" (SKU: ${product.sku}) — ${product.price}. Gracias.`;
+
+            const whatsappUrl = `${whatsappBaseUrl}?text=${encodeURIComponent(whatsappMessage)}`;
+
+            const stockLabel = product.stock === 'in' ? 'En Stock' : 'Sin Stock';
+            const stockClass = product.stock === 'in' ? '' : 'out-of-stock';
+
+            card.innerHTML = `
+                <div class="product-stock ${stockClass}">${stockLabel}</div>
+                <img src="${getProductImage(product)}" alt="${product.brand} ${product.name}" class="product-image" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\'%3E%3Crect fill=\'%23f0f0f0\' width=\'400\' height=\'400\'/%3E%3Ctext fill=\'%238a8a8a\' font-family=\'Arial\' font-size=\'18\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dominant-baseline=\'middle\'%3E${product.brand}%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <div class="product-brand">${product.brand}</div>
+                    <h3 class="product-name">${product.name}</h3>
+                    <div class="product-volume">${product.volume}</div>
+                    <div class="product-price">${product.price}</div>
+                    <div class="product-sku">SKU: ${product.sku}</div>
+                    <button class="product-button" onclick="window.open('${whatsappUrl}', '_blank')" aria-label="Consultar disponibilidad de ${product.name}">
+                        Consultar disponibilidad
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function renderProducts() {
+            // Productos destacados primero
+            const featured = products.filter(p => p.featured);
+            const regular = products.filter(p => !p.featured);
+
+            if (currentPage === 0) {
+                // Primera carga: mostrar destacados
+                catalogGrid.innerHTML = '';
+                featured.forEach(product => {
+                    catalogGrid.appendChild(createProductCard(product));
+                });
+                currentPage++;
+            } else {
+                // Cargas siguientes: mostrar productos regulares
+                const start = (currentPage - 1) * ITEMS_PER_PAGE;
+                const end = start + ITEMS_PER_PAGE;
+                const productsToShow = regular.slice(start, end);
+
+                productsToShow.forEach(product => {
+                    catalogGrid.appendChild(createProductCard(product));
+                });
+
+                currentPage++;
+
+                // Ocultar botón si no hay más productos
+                if (end >= regular.length) {
+                    loadMoreBtn.classList.add('hidden');
+                }
+            }
+        }
+
+        loadMoreBtn.addEventListener('click', renderProducts);
+
+        // Carga inicial
+        renderProducts();
+    </script>
+</body>
+</html>
