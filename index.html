@@ -22,7 +22,7 @@
 
            2. WHATSAPP:
               Busca "const WHATSAPP_NUMBER" en el JavaScript
-              Reemplaza con tu número (formato: 5491127178938 sin +)
+              Reemplaza con tu número (formato: 5491127466736 sin +)
 
            3. INSTAGRAM:
               Busca "const INSTAGRAM_USER" en el JavaScript
@@ -288,6 +288,63 @@
             color: rgba(255, 255, 255, 0.85);
             font-weight: 300;
             line-height: 1.8;
+        }
+
+        /* BARRA DE BÚSQUEDA */
+        .search-container {
+            background-color: var(--color-secondary);
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .search-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.85rem 1.25rem;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--color-primary);
+            color: var(--color-text);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-light);
+        }
+
+        .search-btn {
+            padding: 0.85rem 1.5rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+            color: var(--color-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         /* SECCIONES */
@@ -795,6 +852,7 @@
         <nav>
             <a href="#inicio">Inicio</a>
             <a href="#catalogo">Catálogo</a>
+            <a href="#victoriasecret">Victoria Secret</a>
             <a href="#contacto">Contacto</a>
         </nav>
     </aside>
@@ -806,6 +864,16 @@
             <p>Descubre nuestra colección de fragancias exclusivas con atención personalizada</p>
         </div>
     </section>
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar productos por marca o nombre...">
+                <button class="search-btn" id="searchBtn">Buscar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- CATÁLOGO -->
     <main>
@@ -866,7 +934,7 @@
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
-                    <h4>Atención Personalizada de una paraguaya</h4>
+                    <h4>Atención Personalizada</h4>
                     <p>Te asesoramos para encontrar la fragancia perfecta para vos</p>
                 </div>
                 <div class="info-card">
@@ -880,10 +948,16 @@
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
                     </svg>
-                    <h4>Productos 100% Originales </h4>
+                    <h4>Productos 100% Originales</h4>
                     <p>Fragancias auténticas de las mejores marcas</p>
                 </div>
             </div>
+        </section>
+
+        <!-- VICTORIA SECRET -->
+        <section id="victoriasecret">
+            <h2 class="section-title">Victoria Secret</h2>
+            <div class="catalog-grid" id="victoriaSecretGrid"></div>
         </section>
     </main>
 
@@ -915,11 +989,11 @@
         // ==========================================
 
         // LOGO - Elige entre texto o imagen
-        const LOGO_TEXT = 'TYD IMPORTADOS'; // Reemplaza con tu texto (déjalo vacío si usas imagen)
+        const LOGO_TEXT = 'TID IMPORTADOS'; // Reemplaza con tu texto (déjalo vacío si usas imagen)
         const LOGO_IMAGE_URL = ''; // Reemplaza con tu URL de logo (ej: 'logo.png' o 'https://ejemplo.com/logo.png')
 
-        const WHATSAPP_NUMBER = '5491127178938'; // Reemplaza con tu número (formato: 5491127178938)
-        const INSTAGRAM_USER = 'tydimportados'; // Reemplaza con tu usuario (sin @)
+        const WHATSAPP_NUMBER = '5491112345678'; // Reemplaza con tu número (formato: 5491127466736)
+        const INSTAGRAM_USER = 'tidimportados'; // Reemplaza con tu usuario (sin @)
 
         // Función para generar ruta de imagen (puedes editarla)
         // Si la propiedad 'image' está vacía en el producto, usa la URL por defecto
@@ -1016,6 +1090,20 @@
             { sku: 'ZIMAYA076', name: 'SHARAF BLEND', brand: 'ZIMAYA', volume: '100ML', price: '$65.000', featured: false, image: 'https://res.cloudinary.com/dh0tjg9eh/image/upload/v1764015814/download_fc8wxz.jpg', stock: 'in' },
             { sku: 'ZIMAYA077', name: 'TIRAMISU CARAMEL', brand: 'ZIMAYA', volume: '100ML', price: '$65.000', featured: false, image: 'https://res.cloudinary.com/dh0tjg9eh/image/upload/v1764015850/download_eqiqjw.jpg', stock: 'in' },
             { sku: 'ZIMAYA078', name: 'TIRAMISU COCO', brand: 'ZIMAYA', volume: '100ML', price: '$65.000', featured: false, image: 'https://res.cloudinary.com/dh0tjg9eh/image/upload/v1764015876/download_coiz5v.jpg', stock: 'in' }
+        ];
+
+        // PRODUCTOS VICTORIA SECRET
+        const victoriaSecretProducts = [
+            { sku: 'VS001', name: 'BARE VANILLA', brand: 'VICTORIA SECRET', volume: '250ML', price: '$85.000', image: '', stock: 'in' },
+            { sku: 'VS002', name: 'BOMBSHELL', brand: 'VICTORIA SECRET', volume: '250ML', price: '$95.000', image: '', stock: 'in' },
+            { sku: 'VS003', name: 'BOMBSHELL SEDUCTION', brand: 'VICTORIA SECRET', volume: '250ML', price: '$95.000', image: '', stock: 'in' },
+            { sku: 'VS004', name: 'PURE SEDUCTION', brand: 'VICTORIA SECRET', volume: '250ML', price: '$90.000', image: '', stock: 'in' },
+            { sku: 'VS005', name: 'VERY SEXY', brand: 'VICTORIA SECRET', volume: '250ML', price: '$100.000', image: '', stock: 'in' },
+            { sku: 'VS006', name: 'SCANDALOUS', brand: 'VICTORIA SECRET', volume: '250ML', price: '$98.000', image: '', stock: 'in' },
+            { sku: 'VS007', name: 'AQUA KISS', brand: 'VICTORIA SECRET', volume: '250ML', price: '$92.000', image: '', stock: 'in' },
+            { sku: 'VS008', name: 'DREAM ANGELS', brand: 'VICTORIA SECRET', volume: '250ML', price: '$88.000', image: '', stock: 'in' },
+            { sku: 'VS009', name: 'ROMANTIC', brand: 'VICTORIA SECRET', volume: '250ML', price: '$85.000', image: '', stock: 'in' },
+            { sku: 'VS010', name: 'LOVE SPELL', brand: 'VICTORIA SECRET', volume: '250ML', price: '$90.000', image: '', stock: 'in' }
         ];
 
         // ==========================================
@@ -1135,10 +1223,54 @@
             }
         }
 
+        function renderVictoriaSecret() {
+            const victoriaGrid = document.getElementById('victoriaSecretGrid');
+            victoriaGrid.innerHTML = '';
+            victoriaSecretProducts.forEach(product => {
+                victoriaGrid.appendChild(createProductCard(product));
+            });
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            if (!searchTerm) {
+                // Si no hay búsqueda, restaurar catálogo normal
+                currentPage = 0;
+                catalogGrid.innerHTML = '';
+                renderProducts();
+                loadMoreBtn.classList.remove('hidden');
+                return;
+            }
+
+            // Filtrar productos
+            const filtered = products.filter(p =>
+                p.name.toLowerCase().includes(searchTerm) ||
+                p.brand.toLowerCase().includes(searchTerm) ||
+                p.sku.toLowerCase().includes(searchTerm)
+            );
+
+            // Mostrar resultados
+            catalogGrid.innerHTML = '';
+            if (filtered.length === 0) {
+                catalogGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--color-text-light);">No se encontraron productos</div>';
+            } else {
+                filtered.forEach(product => {
+                    catalogGrid.appendChild(createProductCard(product));
+                });
+            }
+            loadMoreBtn.classList.add('hidden');
+        }
+
         loadMoreBtn.addEventListener('click', renderProducts);
+        document.getElementById('searchBtn').addEventListener('click', searchProducts);
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchProducts();
+        });
 
         // Carga inicial
         renderProducts();
+        renderVictoriaSecret();
     </script>
 </body>
 </html>
